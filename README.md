@@ -57,7 +57,7 @@ Data augmentation is a crucial step in this project to increase the diversity an
 
 > **Note:** The augmented images will be stored on your local device.
 
-After augmenting the images, we are done with PART 1 and we can proceed to uploading these images to Roboflow for annotations.
+After augmenting the images, we are done with `PART 1` and we can proceed to uploading these images to Roboflow for annotations in `PART 2`.
 
 
 

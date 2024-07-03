@@ -8,7 +8,7 @@ cap.set(3, 1280)
 cap.set(4, 720)
 
 # Load YOLOv8 model
-model = YOLO("Inferencing/XDreamv1(m).pt")
+model = YOLO("PATH to .pt file of your model")
 
 # Set the capture interval in seconds
 capture_interval = 0

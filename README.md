@@ -6,7 +6,8 @@ The first step in this project is to collect a dataset of images that will be us
 
 To build the dataset, you can utilize publicly available image datasets, such as:
 
-COCO Dataset
+COCO Dataset \n
 Open Images Dataset
 ImageNet
+
 Alternatively, you can also collect your own images using web scraping techniques or by taking photographs yourself. If you choose to collect your own images, ensure that you have the necessary permissions and adhere to any applicable copyright or usage restrictions.

@@ -108,19 +108,19 @@ Before you begin, ensure that you have the following:
 
 ### Set up CUDA for GPU Acceleration (Optional)
 
-If you have a CUDA-enabled GPU, you can set it up to accelerate the training process. Follow these steps:
+If you have a `CUDA-enabled GPU`, you can set it up to accelerate the training process. Follow these steps:
 
-1. **Install CUDA toolkit:** Download and install the CUDA Toolkit from the NVIDIA website. The version should match the requirements of the ultralytics library.
+1. **Install CUDA toolkit:** Download and install the `CUDA Toolkit` from the NVIDIA website. The version should match the requirements of the ultralytics library.
    
-2. **Install CUDA-Enabled PyTorch:** Install a CUDA-enabled version of PyTorch that is compatible with your CUDA Toolkit version. You can use the pip command provided on the PyTorch website.
+2. **Install CUDA-Enabled PyTorch:** Install a CUDA-enabled version of PyTorch that is compatible with your CUDA Toolkit version. You can use the `pip` command provided on the PyTorch website.
    
-3. **Verify the CUDA Installation:** Run the following Python code to ensure that CUDA is properly installed and recognized by the ultralytics library:
+3. **Verify the CUDA Installation:** Run the following `Python code` to ensure that CUDA is properly installed and recognized by the ultralytics library:
    ```
    from ultralytics import YOLO
    device = YOLO("yolov8s.pt").device
    print(f"Using device: {device}")
    ```
-   If the output shows "cuda" as the device, your CUDA setup is successful.
+   If the output shows `"cuda"` as the `device`, your CUDA setup is successful.
 
 ### Model Training Steps 
 
@@ -129,7 +129,12 @@ You can follow this [Colab Notebook](https://colab.research.google.com/github/ro
 
 #### 1. Export the Dataset:
 
-Export the Roboflow dataset created in the previous part using the code below:
+You can use this [dataset]()
+
+or 
+
+
+You can export your own Roboflow dataset created in the previous part using the code below:
 
 ```
 !mkdir {HOME}/datasets
@@ -143,6 +148,35 @@ project = rf.workspace("roboflow-jvuqo").project("football-players-detection-3zv
 dataset = project.version(1).download("yolov8")
 ```
 
+
+#### 2. Train the YOLOv8 Model:
+
+1. **Start the Training:** Use the `yolo` command-line tool provided by the ultralytics library to initiate the training process. Enter this command in your terminal-
+
+   ```
+   yolo task=detect mode=train model=yolov8s.pt data=dataset.yaml epochs=100 batch=16
+   ```
+   If you have a `CUDA-enabled GPU`, you can use the device parameter to specify the GPU to use:
+
+   ```
+   yolo task=detect mode=train model=yolov8s.pt data=dataset.yaml epochs=100 batch=16 device=0
+   ```
+
+2. **Monitor the Training Process:** Keep an eye on the `training progress`, loss values, and other metrics to ensure the model is converging as expected.
+
+3. **Checkpoint and Save the Model:** During the training, the ultralytics library will automatically save checkpoint files at regular intervals. You can also manually save the final trained model for later use.
+
+
+#### 3. Testing the model on Validation set
+
+   After training, use the trained model to run inference on the validation set to evaluate its performance. You can run training using the `file` [yolov8_custom.py](https://github.com/Gunek-945/Animal-detection-system/blob/main/yolov8_custom.py) in the repository.
+   Review the evaluation metrics and identify areas for improvement. You may need to adjust the training parameters, augment the dataset, or fine-tune the model further.
+
+By following these steps, you can train the YOLOv8 model on your custom dataset and evaluate its performance.
+
+
+
+   
 
 
 

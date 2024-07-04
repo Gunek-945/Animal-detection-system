@@ -89,8 +89,59 @@ After uploading the augmented images to Roboflow, the next step is to label and 
 5. Manage Annotations: Roboflow provides features to manage your annotations, such as exporting them in various formats (e.g., COCO, Pascal VOC, YOLO) and versioning the dataset.
 
 
+## Part3: Training YOLOv8 model on Custom Dataset
+
+After completing the dataset labeling and annotation steps in `Part 2`, you are now ready to train the `YOLOv8` model on our custom dataset. This part of the project will guide you through the model training process.
+
+### Prerequisits
+
+Before you begin, ensure that you have the following:
+
+1. Python 3.7 or higher installed on your system.
+   
+2. The ultralytics library installed. You can install it using pip:
+   ```
+   pip install ultralytics
+   ```
+   
+3. Your labeled and annotated dataset ready in a format compatible with YOLOv8
+
+### Set up CUDA for GPU Acceleration (Optional)
+
+If you have a CUDA-enabled GPU, you can set it up to accelerate the training process. Follow these steps:
+
+1. **Install CUDA toolkit:** Download and install the CUDA Toolkit from the NVIDIA website. The version should match the requirements of the ultralytics library.
+   
+2. **Install CUDA-Enabled PyTorch:** Install a CUDA-enabled version of PyTorch that is compatible with your CUDA Toolkit version. You can use the pip command provided on the PyTorch website.
+   
+3. **Verify the CUDA Installation:** Run the following Python code to ensure that CUDA is properly installed and recognized by the ultralytics library:
+   ```
+   from ultralytics import YOLO
+   device = YOLO("yolov8s.pt").device
+   print(f"Using device: {device}")
+   ```
+   If the output shows "cuda" as the device, your CUDA setup is successful.
+
+### Model Training Steps 
+
+You can follow this [Colab Notebook](https://colab.research.google.com/github/roboflow-ai/notebooks/blob/main/notebooks/train-yolov8-object-detection-on-custom-dataset.ipynb) to train your Model virtually on Google Colab or you can follow the following steps to train it locally:
 
 
+#### 1. Export the Dataset:
+
+Export the Roboflow dataset created in the previous part using the code below:
+
+```
+!mkdir {HOME}/datasets
+%cd {HOME}/datasets
+
+!pip install roboflow --quiet
+
+from roboflow import Roboflow
+rf = Roboflow(api_key="YOUR_API_KEY")
+project = rf.workspace("roboflow-jvuqo").project("football-players-detection-3zvbc")
+dataset = project.version(1).download("yolov8")
+```
 
 
 

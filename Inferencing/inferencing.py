@@ -1,6 +1,7 @@
 from ultralytics import YOLO
 import cv2
 import time
+import json
 
 # Initialize camera
 cap = cv2.VideoCapture(0)
@@ -8,7 +9,7 @@ cap.set(3, 1280)
 cap.set(4, 720)
 
 # Load YOLOv8 model
-model = YOLO("PATH to .pt file of your model")
+model = YOLO("Inferencing/XDreamv1(m).pt")
 
 # Set the capture interval in seconds
 capture_interval = 0
@@ -27,6 +28,18 @@ while True:
 
         results = model(img)
 
+        # Initialize the JSON data
+        detection_data = {
+            "Alarm Message": {
+                "Detection Zone ID": None,
+                "Status": {
+                    "LED": False,
+                    "ULT": False,
+                    "BDS": False
+                }
+            }
+        }
+
         # Iterate over the detected objects
         for result in results:
             boxes = result.boxes
@@ -43,7 +56,25 @@ while True:
                 # Draw the bounding box and label on the image
                 cv2.rectangle(img, (x1, y1), (x2, y2), (255, 0, 0), 2)
                 cv2.putText(img, f"{class_name} ({confidence:.2f})", (x1, y1 - 10), cv2.FONT_HERSHEY_SIMPLEX, 0.5, (36, 255, 12), 2)
+            
+                # Determine the detection zone ID
+                if x1 < 320:
+                    detection_data["Alarm Message"]["Detection Zone ID"] = "A"
+                else:
+                    detection_data["Alarm Message"]["Detection Zone ID"] = "B"
 
+                # Set the status flags based on the detected class
+                if class_name == "boar":
+                    detection_data["Alarm Message"]["Status"]["LED"] = True
+                elif class_name == "dog":
+                    detection_data["Alarm Message"]["Status"]["ULT"] = True
+                elif class_name == "cow":
+                    detection_data["Alarm Message"]["Status"]["BDS"] = True
+                elif class_name == "person":
+                    detection_data["Alarm Message"]["Status"]["LED"] = False
+                    detection_data["Alarm Message"]["Status"]["ULT"] = False
+                    detection_data["Alarm Message"]["Status"]["BDS"] = False
+        
         # Display the resulting image
         cv2.imshow("YOLOv8 Prediction", img)
 

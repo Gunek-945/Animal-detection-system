@@ -66,10 +66,16 @@ while True:
                 # Set the status flags based on the detected class
                 if class_name == "boar":
                     detection_data["Alarm Message"]["Status"]["LED"] = True
-                elif class_name == "dog":
                     detection_data["Alarm Message"]["Status"]["ULT"] = True
-                elif class_name == "cow":
                     detection_data["Alarm Message"]["Status"]["BDS"] = True
+                elif class_name == "dog":
+                    detection_data["Alarm Message"]["Status"]["ULT"] = False
+                    detection_data["Alarm Message"]["Status"]["ULT"] = False
+                    detection_data["Alarm Message"]["Status"]["BDS"] = False
+                elif class_name == "cow":
+                    detection_data["Alarm Message"]["Status"]["BDS"] = False
+                    detection_data["Alarm Message"]["Status"]["ULT"] = False
+                    detection_data["Alarm Message"]["Status"]["BDS"] = False
                 elif class_name == "person":
                     detection_data["Alarm Message"]["Status"]["LED"] = False
                     detection_data["Alarm Message"]["Status"]["ULT"] = False

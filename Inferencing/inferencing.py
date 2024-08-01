@@ -1,4 +1,5 @@
 from ultralytics import YOLO
+from serial import Serial
 import cv2
 import time
 import json
@@ -9,10 +10,10 @@ cap.set(3, 1280)
 cap.set(4, 720)
 
 # Load YOLOv8 model
-model = YOLO("Inferencing/XDreamv1(m).pt")
+model = YOLO("XDreamv1(n).pt")
 
 # Set the capture interval in seconds
-capture_interval = 0
+capture_interval = 2
 
 last_capture_time = 0
 
@@ -29,16 +30,18 @@ while True:
         results = model(img)
 
         # Initialize the JSON data
-        detection_data = {
-            "Alarm Message": {
-                "Detection Zone ID": None,
-                "Status": {
-                    "LED": False,
-                    "ULT": False,
-                    "BDS": False
-                }
+        detection_data =     {
+        "Alarm Message" : {
+            "Detection Zone ID" : "A",
+            "Status" :{
+                "LED" : False,
+                "ULT" : False,
+                "BDS" : False
             }
         }
+    }
+
+
 
         # Iterate over the detected objects
         for result in results:
@@ -86,6 +89,12 @@ while True:
 
         # Update the last capture time
         last_capture_time = current_time
+
+        uart= Serial(port= '/dev/ttyTHS0', baudrate=115200, timeout=1)
+        json_message= json.dumps(detection_data)
+        print(json_message)
+        uart.write(json_message.encode())
+        uart.close()
 
     # Press 'q' to exit
     if cv2.waitKey(1) & 0xFF == ord('q'):

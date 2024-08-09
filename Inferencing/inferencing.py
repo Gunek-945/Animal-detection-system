@@ -58,10 +58,6 @@ def process_stream(rtsp_url):
                     class_name = model.names[class_id]
                     confidence = float(box.conf[0])
 
-                    # Draw the bounding box and label on the image
-                    cv2.rectangle(img, (x1, y1), (x2, y2), (255, 0, 0), 2)
-                    cv2.putText(img, f"{class_name} ({confidence:.2f})", (x1, y1 - 10), cv2.FONT_HERSHEY_SIMPLEX, 0.5, (36, 255, 12), 2)
-
                     # Determine the detection zone ID
                     if x1 < 320:
                         detection_data["Alarm Message"]["Detection Zone ID"] = "A"
@@ -86,24 +82,17 @@ def process_stream(rtsp_url):
                         detection_data["Alarm Message"]["Status"]["ULT"] = False
                         detection_data["Alarm Message"]["Status"]["BDS"] = False
 
-            # Display the resulting image
-            # cv2.imshow(f"YOLOv8 Prediction - {rtsp_url}", img)
-
             # Update the last capture time
             last_capture_time = current_time
 
             uart = Serial(port='/dev/ttyTHS0', baudrate=115200, timeout=1)
             json_message = json.dumps(detection_data)
+            print(f"Detection in stream: {rtsp_url}")
             print(json_message)
             uart.write(json_message.encode())
             uart.close()
 
-        # Press 'q' to exit
-        if cv2.waitKey(1) & 0xFF == ord('q'):
-            break
-
     cap.release()
-    # cv2.destroyWindow(f"YOLOv8 Prediction - {rtsp_url}")
 
 # Create a thread for each RTSP stream
 threads = []
@@ -115,5 +104,3 @@ for rtsp_url in rtsp_urls:
 # Wait for all threads to finish
 for t in threads:
     t.join()
-
-cv2.destroyAllWindows()

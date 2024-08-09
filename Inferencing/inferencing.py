@@ -61,6 +61,7 @@ def process_stream(rtsp_url, stream_index):
                     # Draw the bounding box and label on the image
                     cv2.rectangle(img, (x1, y1), (x2, y2), (255, 0, 0), 2)
                     cv2.putText(img, f"{class_name} ({confidence:.2f})", (x1, y1 - 10), cv2.FONT_HERSHEY_SIMPLEX, 0.5, (36, 255, 12), 2)
+                    cv2.putText(img, f"Stream {stream_index}", (10, 30), cv2.FONT_HERSHEY_SIMPLEX, 0.5, (255, 255, 255), 2)
 
                     # Determine the detection zone ID
                     if x1 < 320:
@@ -86,9 +87,6 @@ def process_stream(rtsp_url, stream_index):
                         detection_data["Alarm Message"]["Status"]["ULT"] = False
                         detection_data["Alarm Message"]["Status"]["BDS"] = False
 
-            # Display the resulting image
-            cv2.imshow(f"YOLOv8 Prediction - Stream {stream_index}", img)
-
             # Update the last capture time
             last_capture_time = current_time
 
@@ -98,12 +96,7 @@ def process_stream(rtsp_url, stream_index):
             uart.write(json_message.encode())
             uart.close()
 
-        # Press 'q' to exit
-        if cv2.waitKey(1) & 0xFF == ord('q'):
-            break
-
     cap.release()
-    cv2.destroyWindow(f"YOLOv8 Prediction - Stream {stream_index}")
 
 # Create a thread for each RTSP stream
 threads = []
@@ -115,5 +108,20 @@ for i, rtsp_url in enumerate(rtsp_urls):
 # Wait for all threads to finish
 for t in threads:
     t.join()
+
+# Create a single window to display the CCTV grid
+window_name = "CCTV Grid"
+cv2.namedWindow(window_name, cv2.WINDOW_NORMAL)
+cv2.resizeWindow(window_name, 1280, 720)
+
+# Display the frames from the three streams in a 3x1 grid
+while True:
+    frames = [cv2.VideoCapture(url).read()[1] for url in rtsp_urls]
+    grid_frame = cv2.hconcat([cv2.resize(frame, (426, 240)) for frame in frames])
+    cv2.imshow(window_name, grid_frame)
+
+    # Press 'q' to exit
+    if cv2.waitKey(1) & 0xFF == ord('q'):
+        break
 
 cv2.destroyAllWindows()

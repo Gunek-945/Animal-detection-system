@@ -9,9 +9,9 @@ import threading
 model = YOLO("XDreamv1(n).pt")
 
 # List of RTSP stream URLs
-rtsp_urls = ['rtsp://admin:devgraphite2024@192.168.1.168:554/Streaming/Channels/101',
-             'rtsp://admin:devgraphite2024@192.168.1.168:554/Streaming/Channels/201',
-             'rtsp://admin:devgraphite2024@192.168.1.168:554/Streaming/Channels/301']
+rtsp_urls = ['rtsp://admin:devgraphite2024@192.168.254.5:554/Streaming/Channels/101',
+             'rtsp://admin:devgraphite2024@192.168.254.5:554/Streaming/Channels/201'
+            ]
 
 def process_stream(rtsp_url):
     cap = cv2.VideoCapture(rtsp_url)
@@ -19,7 +19,7 @@ def process_stream(rtsp_url):
     cap.set(4, 720)
 
     # Set the capture interval in seconds
-    capture_interval = 5
+    capture_interval = 10
     last_capture_time = 0
 
     while True:
@@ -87,7 +87,10 @@ def process_stream(rtsp_url):
 
             uart = Serial(port='/dev/ttyTHS0', baudrate=115200, timeout=1)
             json_message = json.dumps(detection_data)
-            print(f"Detection in stream: {rtsp_url}")
+            if rtsp_urls[0]==rtsp_url or rtsp_url[1]== rtsp_url:
+                print(f"Detection in camera 1")
+            else:
+                print(f"Detection in {rtsp_url}")
             print(json_message)
             uart.write(json_message.encode())
             uart.close()

@@ -9,9 +9,9 @@ import threading
 model = YOLO("XDreamv1(n).pt")
 
 # List of RTSP stream URLs
-rtsp_urls = ['rtsp://username:password@192.168.1.100/stream1',
-            'rtsp://username:password@192.168.1.101/stream2',
-            'rtsp://username:password@192.168.1.102/stream3']
+rtsp_urls = ['rtsp://admin:devgraphite2024@192.168.1.168:554/Streaming/Channels/101',
+             'rtsp://admin:devgraphite2024@192.168.1.168:554/Streaming/Channels/201',
+             'rtsp://admin:devgraphite2024@192.168.1.168:554/Streaming/Channels/301']
 
 def process_stream(rtsp_url):
     cap = cv2.VideoCapture(rtsp_url)
@@ -19,7 +19,7 @@ def process_stream(rtsp_url):
     cap.set(4, 720)
 
     # Set the capture interval in seconds
-    capture_interval = 2
+    capture_interval = 5
     last_capture_time = 0
 
     while True:
@@ -103,7 +103,7 @@ def process_stream(rtsp_url):
             break
 
     cap.release()
-    cv2.destroyWindow(f"YOLOv8 Prediction - {rtsp_url}")
+    # cv2.destroyWindow(f"YOLOv8 Prediction - {rtsp_url}")
 
 # Create a thread for each RTSP stream
 threads = []

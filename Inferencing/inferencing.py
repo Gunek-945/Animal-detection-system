@@ -13,10 +13,10 @@ rtsp_urls = ['rtsp://admin:devgraphite2024@192.168.1.168:554/Streaming/Channels/
              'rtsp://admin:devgraphite2024@192.168.1.168:554/Streaming/Channels/201',
              'rtsp://admin:devgraphite2024@192.168.1.168:554/Streaming/Channels/301']
 
-def process_stream(rtsp_url):
+def process_stream(rtsp_url, stream_index):
     cap = cv2.VideoCapture(rtsp_url)
-    cap.set(3, 1280)
-    cap.set(4, 720)
+    cap.set(3, 640)
+    cap.set(4, 480)
 
     # Set the capture interval in seconds
     capture_interval = 5
@@ -87,7 +87,7 @@ def process_stream(rtsp_url):
                         detection_data["Alarm Message"]["Status"]["BDS"] = False
 
             # Display the resulting image
-            cv2.imshow(f"YOLOv8 Prediction - {rtsp_url}", img)
+            cv2.imshow(f"YOLOv8 Prediction - Stream {stream_index}", img)
 
             # Update the last capture time
             last_capture_time = current_time
@@ -103,12 +103,12 @@ def process_stream(rtsp_url):
             break
 
     cap.release()
-    # cv2.destroyWindow(f"YOLOv8 Prediction - {rtsp_url}")
+    cv2.destroyWindow(f"YOLOv8 Prediction - Stream {stream_index}")
 
 # Create a thread for each RTSP stream
 threads = []
-for rtsp_url in rtsp_urls:
-    t = threading.Thread(target=process_stream, args=(rtsp_url,))
+for i, rtsp_url in enumerate(rtsp_urls):
+    t = threading.Thread(target=process_stream, args=(rtsp_url, i+1))
     t.start()
     threads.append(t)
 

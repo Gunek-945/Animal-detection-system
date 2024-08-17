@@ -195,9 +195,9 @@ The NVIDIA Orin Nano communicates with the ESP32 module via UART (Universal Asyn
 
 - Clone this repository to your computer
 - Open the folder inside VSCode
-![VSCode board type](/VSCode%20Tutorial/VSCode%20setup.png)
+![VSCode board type]
 - Under `<Select board type>`, select `ESP32 Dev Module (esp32)`
-- The board setting should be the same as the following [image](/VSCode%20Tutorial/ESP32%20Dev%20Module%20Configuration.png)
+- The board setting should be the same as the following
 - Under `<Select Programmer>`, select `Esptool`
 - Under `<Select Serial Port>`, select the serial port connecting to the ESP32. It should be similar to `COMXX Silicon Labs CP210x USB to UART Bridge (COMXX)`, where `XX` refer to the COM port you are connecting to.
 - You should be able to upload the program to ESP32
@@ -268,7 +268,7 @@ To use `Serial1` instead of `Serial`, change the current `UART Communication.ino
 
 
   
-###Running the inferencing with communication of JSON file
+### Running the inferencing with communication of JSON file
 
 Once you have set up the connection run the inferencing code in the JSON Branch of this repository. You can access the code [here](https://github.com/Gunek-945/Animal-detection-system/blob/JSON/Inferencing/inferencing.py)
 

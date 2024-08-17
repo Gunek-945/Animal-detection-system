@@ -265,7 +265,14 @@ To use `Serial1` instead of `Serial`, change the current `UART Communication.ino
 - Red LED : Power LED wil be on once the ESP32 is powered
 - Blue LED : This represent deterrent module's Deterrent LED, currently it will turn off after 10 seconds
 - White LED : This represent deterrent module's ultrasound speaker, currently it will turn off after 20 seconds 
-- Yellow LED : This represent the spraying system of the deterrent module, it will turn off after receiving turn off command 
+- Yellow LED : This represent the spraying system of the deterrent module, it will turn off after receiving turn off command
+
+
+  
+###Running the inferencing with communication of JSON file
+
+Once you have set up the connection run the inferencing code in the JSON Branch of this repository. You can access the code [here](https://github.com/Gunek-945/Animal-detection-system/blob/JSON/Inferencing/inferencing.py)
+
 
 
    

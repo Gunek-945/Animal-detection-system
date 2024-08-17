@@ -174,15 +174,13 @@ dataset = project.version(1).download("yolov8")
 
 By following these steps, you can train the YOLOv8 model on your custom dataset and evaluate its performance.
 
-##Part 4: UART Communication with NVIDIA Orin Nano and ESP32 Module
+#Part 4: UART Communication Program
 
 This section describes how to implement UART communication between the NVIDIA Orin Nano and an ESP32 module to control an LED based on object detection results from the YOLOv8 model.
 
 ### Overview
 
 The NVIDIA Orin Nano communicates with the ESP32 module via UART (Universal Asynchronous Receiver-Transmitter). Upon detecting a specific object with the YOLOv8 model, a signal is sent to the ESP32 to light up an LED.
-
-# Guide on using UART Communication Program
 
 ## How to upload program to ESP32
 

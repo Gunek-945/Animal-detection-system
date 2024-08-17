@@ -174,7 +174,8 @@ dataset = project.version(1).download("yolov8")
 
 By following these steps, you can train the YOLOv8 model on your custom dataset and evaluate its performance.
 
-#Part 4: UART Communication Program
+
+## Part 4: UART Communication Program
 
 This section describes how to implement UART communication between the NVIDIA Orin Nano and an ESP32 module to control an LED based on object detection results from the YOLOv8 model.
 

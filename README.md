@@ -182,23 +182,90 @@ This section describes how to implement UART communication between the NVIDIA Or
 
 The NVIDIA Orin Nano communicates with the ESP32 module via UART (Universal Asynchronous Receiver-Transmitter). Upon detecting a specific object with the YOLOv8 model, a signal is sent to the ESP32 to light up an LED.
 
-### Circuit Setup
+# Guide on using UART Communication Program
 
-1. **Wiring the ESP32 and Orin Nano:**
-   - Connect the TX pin of the Orin Nano to the RX pin of the ESP32.
-   - Connect the RX pin of the Orin Nano to the TX pin of the ESP32.
-   - Connect the GND pin of both the Orin Nano and ESP32 to ensure they share a common ground.
+## How to upload program to ESP32
 
-2. **Connecting the LED:**
-   - Connect a suitable resistor to the LED to limit current.
-   - Connect the anode (positive leg) of the LED to one of the GPIO pins on the ESP32.
-   - Connect the cathode (negative leg) of the LED to the ground.
+### IDE setup
 
-3. **Power Supply:**
-   - Ensure that both devices are powered adequately. The ESP32 can be powered via USB or an external source, while the Orin Nano should be connected to a suitable power supply.
+**VSCode**
+- For [VSCode](https://code.visualstudio.com/), this [guide](https://www.circuitstate.com/tutorials/how-to-use-vs-code-for-creating-and-uploading-arduino-sketches/) should be able to provide the basics  
+- To use ESP32 board ion VScode : Open `Arduino Board Manager` inside Command Palette (By using `Ctrl + Shift + P` ) and select `Addtional URLS`, then select `Add item` and paste `https://dl.espressif.com/dl/package_esp32_index.json` to ESP32 into VSCode
+
+### Uploading Program
+
+- Clone this repository to your computer
+- Open the folder inside VSCode
+![VSCode board type](/VSCode%20Tutorial/VSCode%20setup.png)
+- Under `<Select board type>`, select `ESP32 Dev Module (esp32)`
+- The board setting should be the same as the following [image](/VSCode%20Tutorial/ESP32%20Dev%20Module%20Configuration.png)
+- Under `<Select Programmer>`, select `Esptool`
+- Under `<Select Serial Port>`, select the serial port connecting to the ESP32. It should be similar to `COMXX Silicon Labs CP210x USB to UART Bridge (COMXX)`, where `XX` refer to the COM port you are connecting to.
+- You should be able to upload the program to ESP32
+
+### Serial Monitor
+
+To communicate or view any output from the ESP32, we can utilize the serail monitor of VSCode
+- To open the serail monitor, open the Command Palette by `Ctrl`+`Shift`+`P` and search for `Arduino : Open Serial Monitor` and select the desired Serial Port to connect to
+- Configure the serial monitor to the following settings:
+    - View mode : Text
+    - Baudrate : 115200
+    - Line ending : CRLF
+    - Toggle Sent Message Echoing : Off (Optional)
 
 
+## UART Communication
 
+### Serial / USB Port
+- Set the baudrate of the serial port of the computer to `115200`
+- Directly connect tp the microUSB port of the ESP32
+
+### Serial1
+
+- Option 1 (Through FT232 USB UART Module) :
+    - Connect `TXD` of the FT232 module to the `RX` of Serial1 (i.e. : pin 17)
+    - Connect `RXD` of the FT232 module to the `TX` of Serial1 (i.e. : pin 16)
+    - Connect the microUSB cable to the USB port of the computer
+    - Change the baudrate of the serial port of the computer to `115200`
+
+- Option 2 (Through direct connection UART from edge computer)
+    - Set the baudrate of the serial port to `115200`
+    - Connect `TX` of edge computer to the `RX` of Serial1 (i.e. : pin 17)
+    - Connect `RX` of edge computer to the `TX` of Serial1 (i.e. : pin 16)
+
+### JSON Message
+
+JSON Meesage Format
+``` JSON
+{
+    "Alarm Message": {
+        "Detection Zone ID": A-Z,
+        "Status": {
+            "LED": true/false,
+            "ULT": true/false,
+            "BDS": true/false
+        }
+    }
+}
+```
+
+Please send the JSON in one line
+``` JSON
+{"Alarm Message":{"Detection Zone ID":"A","Status":{"LED":true,"ULT":true,"BDS":true}}}
+```
+
+## Firmware
+
+Currently the default firmwaire file is `UART Communication.ino`, which utilize `Serial` or the microUSB port, which is the temperory solution for easier testing, however this will cause conflict with other functionalities that utilize the USB port (i.e. mainly uploading program to ESP32).
+
+To use `Serial1` instead of `Serial`, change the current `UART Communication.ino` to  `Serail1_UART Communication.txt` and change `Serail1_UART Communication.txt` to `UART Communication.ino`, as Arduino only compiles the file with its name identical to the folder's name.
+
+### Expected Outcome
+
+- Red LED : Power LED wil be on once the ESP32 is powered
+- Blue LED : This represent deterrent module's Deterrent LED, currently it will turn off after 10 seconds
+- White LED : This represent deterrent module's ultrasound speaker, currently it will turn off after 20 seconds 
+- Yellow LED : This represent the spraying system of the deterrent module, it will turn off after receiving turn off command 
 
 
    

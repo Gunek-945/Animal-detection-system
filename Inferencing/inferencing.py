@@ -4,8 +4,8 @@ import time
 import json
 import boto3
 
-AWS_ACCESS_KEY= 'AKIA2VQ2Q3GKBKOGBAFX'
-AWS_SECRET_ACCESS_KEY= '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'
+AWS_ACCESS_KEY= ''
+AWS_SECRET_ACCESS_KEY= ''
 AWS_S3_BUCKET_NAME='boarbucket'
 AWS_REGION= 'ap-southeast-2'
 

@@ -1,19 +1,36 @@
 from ultralytics import YOLO
 import cv2
 import time
+import json
+import boto3
+
+AWS_ACCESS_KEY= 'AKIA2VQ2Q3GKBKOGBAFX'
+AWS_SECRET_ACCESS_KEY= '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'
+AWS_S3_BUCKET_NAME='boarbucket'
+AWS_REGION= 'ap-southeast-2'
+
+
+def upload_frame_to_s3(frame, bucket_name, frame_name):
+    # Initialize S3 client
+    s3_client = boto3.client(service_name='s3', region_name= AWS_REGION,
+                             aws_access_key_id= AWS_ACCESS_KEY, aws_secret_access_key= AWS_SECRET_ACCESS_KEY)
+    
+    _, buffer = cv2.imencode('.jpg', frame)  # Encode the frame as JPEG
+    s3_client.put_object(Bucket=bucket_name, Body=buffer.tobytes(), Key=frame_name)
+
 
 # Initialize camera
-cap = cv2.VideoCapture(0)
-cap.set(3, 1280)
-cap.set(4, 720)
+cap = cv2.VideoCapture('Test Videos\Test 4.mp4')
+cap.set(3, 1920)
+cap.set(4, 1080)
 
 # Load YOLOv8 model
-model = YOLO("PATH to .pt file of your model")
+model = YOLO("XDreamv1(m).pt")
 
 # Set the capture interval in seconds
-capture_interval = 0
+capture_interval = 5
 
-last_capture_time = 0
+last_capture_time = 0 
 
 while True:
     # Read a frame from the camera
@@ -27,6 +44,20 @@ while True:
 
         results = model(img)
 
+        # Initialize the JSON data
+        detection_data = {
+            "Alarm Message": {
+                "Detection Zone ID": None,
+                "Status": {
+                    "LED": False,
+                    "ULT": False,
+                    "BDS": False
+                }
+            }
+        }
+
+        detected = False
+        
         # Iterate over the detected objects
         for result in results:
             boxes = result.boxes
@@ -43,12 +74,46 @@ while True:
                 # Draw the bounding box and label on the image
                 cv2.rectangle(img, (x1, y1), (x2, y2), (255, 0, 0), 2)
                 cv2.putText(img, f"{class_name} ({confidence:.2f})", (x1, y1 - 10), cv2.FONT_HERSHEY_SIMPLEX, 0.5, (36, 255, 12), 2)
+            
+                # # Determine the detection zone ID
+                if x1 < 320:
+                    detection_data["Alarm Message"]["Detection Zone ID"] = "A"
+                else:
+                    detection_data["Alarm Message"]["Detection Zone ID"] = "B"
 
+                detected = True
+
+                # Set the status flags based on the detected class
+                if class_name == "boar":
+                    detection_data["Alarm Message"]["Status"]["LED"] = True
+                    detection_data["Alarm Message"]["Status"]["ULT"] = True
+                    detection_data["Alarm Message"]["Status"]["BDS"] = True
+                elif class_name == "dog":
+                    detection_data["Alarm Message"]["Status"]["ULT"] = False
+                    detection_data["Alarm Message"]["Status"]["ULT"] = False
+                    detection_data["Alarm Message"]["Status"]["BDS"] = False
+                elif class_name == "cow":
+                    detection_data["Alarm Message"]["Status"]["BDS"] = False
+                    detection_data["Alarm Message"]["Status"]["ULT"] = False
+                    detection_data["Alarm Message"]["Status"]["BDS"] = False
+                elif class_name == "person":
+                    detection_data["Alarm Message"]["Status"]["LED"] = False
+                    detection_data["Alarm Message"]["Status"]["ULT"] = False
+                    detection_data["Alarm Message"]["Status"]["BDS"] = False
+                
+        if detected:
+            timestamp = int(time.time())
+            frame_name = f"detection_{timestamp}.jpg"
+            upload_frame_to_s3(img, 'boarbucket' , frame_name)
+                
         # Display the resulting image
         cv2.imshow("YOLOv8 Prediction", img)
 
         # Update the last capture time
         last_capture_time = current_time
+
+        # print(json.dumps(detection_data, indent=2))
+
 
     # Press 'q' to exit
     if cv2.waitKey(1) & 0xFF == ord('q'):

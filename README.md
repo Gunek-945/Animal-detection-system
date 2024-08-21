@@ -215,7 +215,7 @@ This section describes how to implement UART communication between the NVIDIA Or
 
 The NVIDIA Orin Nano communicates with the ESP32 module via UART (Universal Asynchronous Receiver-Transmitter). Upon detecting a specific object with the YOLOv8 model, a signal is sent to the ESP32 to light up an LED.
 
-## How to upload program to ESP32
+### How to upload program to ESP32
 
 ### IDE setup
 
@@ -245,7 +245,7 @@ To communicate or view any output from the ESP32, we can utilize the serail moni
     - Toggle Sent Message Echoing : Off (Optional)
 
 
-## UART Communication
+### UART Communication
 
 ### Serial / USB Port
 - Set the baudrate of the serial port of the computer to `115200`
@@ -285,7 +285,7 @@ Please send the JSON in one line
 {"Alarm Message":{"Detection Zone ID":"A","Status":{"LED":true,"ULT":true,"BDS":true}}}
 ```
 
-## Firmware
+### Firmware
 
 Currently the default firmwaire file is `UART Communication.ino`, which utilize `Serial` or the microUSB port, which is the temperory solution for easier testing, however this will cause conflict with other functionalities that utilize the USB port (i.e. mainly uploading program to ESP32).
 

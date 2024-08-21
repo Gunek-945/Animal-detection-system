@@ -10,6 +10,7 @@ backcall==0.2.0
 beautifulsoup4==4.12.3
 bing-image-downloader==1.1.2
 bleach==6.1.0
+boto3
 certifi==2023.7.22
 cffi==1.16.0
 chardet==4.0.0

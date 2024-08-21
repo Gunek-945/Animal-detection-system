@@ -176,6 +176,37 @@ By following these steps, you can train the YOLOv8 model on your custom dataset 
 
 ## Part 4: Setting up edge device (Nvidia Orin Nano/raspberry pi/orange pi)
 
+In this section, you'll learn how to set up the NVIDIA Orin Nano to run inferencing for your trained YOLOv8 model.
+
+### Requirements
+
+1. **Hardware**:
+   - NVIDIA Orin Nano
+   - Compatible power supply
+   - Monitor and HDMI/display port cable (for initial setup)
+   - Keyboard and mouse
+
+2. **Software**:
+   - JetPack SDK (includes Linux for Tegra)
+
+### Step 1: Install JetPack SDK
+
+1. **Download JetPack**: Go to the [NVIDIA JetPack page](https://developer.nvidia.com/embedded/jetpack) and download the latest version compatible with NVIDIA Orin Nano.
+
+2. **Install JetPack**:
+   - Follow the [installation guide](https://docs.nvidia.com/jetpack/latest/jetpack-install/index.html) provided by NVIDIA to install JetPack on your Orin Nano. This typically involves flashing the JetPack image to a microSD card or directly installing it if you’re using the developer kit.
+
+3. **Initial Setup**:
+   - After installing, connect your monitor, keyboard, and mouse. Power on the device and follow the prompts to complete the initial setup (including setting up network and user accounts).
+
+### Step 2: Install Additional Software
+
+1. **Open a Terminal**: Once the Orin Nano is set up and running, open a terminal to install additional software.
+
+2. **Update the System**: Ensure your system is up-to-date by running:
+   ```bash
+   sudo apt update && sudo apt upgrade
+
 ## Part 5: UART Communication Program
 
 This section describes how to implement UART communication between the NVIDIA Orin Nano and an ESP32 module to control an LED based on object detection results from the YOLOv8 model.

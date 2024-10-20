@@ -1,13 +1,18 @@
+import os
+from dotenv import load_dotenv
 from ultralytics import YOLO
 import cv2
 import time
 import json
 import boto3
 
-AWS_ACCESS_KEY= 'AKIA2VQ2Q3GKBKOGBAFX'
-AWS_SECRET_ACCESS_KEY= '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'
-AWS_S3_BUCKET_NAME='boarbucket'
-AWS_REGION= 'ap-southeast-2'
+load_dotenv()
+
+AWS_ACCESS_KEY = os.getenv('AWS_ACCESS_KEY_ID')
+AWS_SECRET_ACCESS_KEY = os.getenv('AWS_SECRET_ACCESS_KEY')
+AWS_REGION = os.getenv('AWS_DEFAULT_REGION')
+AWS_S3_BUCKET_NAME=os.getenv('AWS_S3_BUCKET_NAME')
+
 
 
 def upload_frame_to_s3(frame, bucket_name, frame_name):

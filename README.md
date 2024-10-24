@@ -304,6 +304,163 @@ To use `Serial1` instead of `Serial`, change the current `UART Communication.ino
 
 Once you have set up the connection run the inferencing code in the JSON Branch of this repository. You can access the code [here](https://github.com/Gunek-945/Animal-detection-system/blob/JSON/Inferencing/inferencing.py)
 
+# Setting up NVR Connection with Orin Nano
+
+This guide provides detailed instructions for connecting a Hikvision NVR to your Orin Nano device.
+
+## Prerequisites
+- Hikvision NVR
+- NVIDIA Orin Nano
+- Ethernet cable
+- Access to NVR's web interface
+
+## Setting up Network Connection
+
+### 1. Initial Network Configuration on Orin Nano
+
+1. Open terminal on Orin Nano and check current network interfaces:
+```bash
+ip addr show
+```
+
+2. Edit the netplan configuration file:
+```bash
+sudo nano /etc/netplan/01-network-manager-all.yaml
+```
+
+3. Add or modify the ethernet configuration:
+```yaml
+network:
+  version: 2
+  renderer: NetworkManager
+  ethernets:
+    eth0:  # Your ethernet interface name might be different
+      addresses:
+        - 192.168.5.170/24  # Choose an IP in the same subnet as NVR
+      nameservers:
+        addresses: [8.8.8.8, 8.8.4.4]
+```
+
+4. Apply the network configuration:
+```bash
+sudo netplan apply
+```
+
+### 2. NVR Network Setup
+
+#### Using SADP Tool
+1. Download SADP (Search Active Devices Protocol) tool from [Hikvision's official website](https://www.hikvision.com/content/dam/hikvision/en/support/download/tools/sadp-tool/For_Windows/V3.0.2.4/SADPTool.exe)
+
+2. Install and run SADP tool
+   - It will automatically discover Hikvision devices on the network
+   - Note down the NVR's IP address (e.g., 192.168.5.6)
+
+#### Network Configuration Verification
+1. From Orin Nano terminal, test connection to NVR:
+```bash
+ping 192.168.5.6  # Replace with your NVR's IP
+```
+
+2. If ping fails, verify:
+   - Physical ethernet connection
+   - IP address configuration
+   - Network mask (should be 255.255.255.0)
+   - No IP conflicts exist on the network
+
+## Accessing NVR Stream
+
+### 1. RTSP Stream Format
+The RTSP URL follows this structure:
+```
+rtsp://username:password@IP_ADDRESS:PORT/Streaming/Channels/CHANNEL_NUMBER
+```
+
+Example:
+```
+rtsp://admin:password123@192.168.5.6:554/Streaming/Channels/101
+```
+
+### 2. Stream Parameters
+- `username`: Default is usually "admin"
+- `password`: Your NVR password
+- `IP_ADDRESS`: NVR's IP address
+- `PORT`: 554 (default RTSP port)
+- `CHANNEL_NUMBER`: 
+  - Format: `[channel][stream type]`
+  - Channel: 1-n (based on camera position)
+  - Stream type: 01 (main stream) or 02 (sub-stream)
+  - Example: 101 (camera 1, main stream)
+
+### 3. Testing Connection
+
+1. Install ffmpeg on Orin Nano:
+```bash
+sudo apt update
+sudo apt install ffmpeg
+```
+
+2. Test RTSP stream:
+```bash
+ffplay rtsp://username:password@192.168.5.6:554/Streaming/Channels/101
+```
+
+### 4. Common Ports
+- 554: RTSP streaming
+- 80: HTTP web interface
+- 8000: SDK access
+- 37777: Private protocol
+
+## Troubleshooting
+
+### Network Issues
+1. Check physical connections
+2. Verify IP settings match subnet
+3. Ensure no firewall blocking
+4. Test with simple ping
+5. Check NVR web interface accessibility
+
+### Stream Issues
+1. Verify RTSP URL format
+2. Check credentials
+3. Confirm port 554 is open
+4. Test with VLC player
+5. Check NVR stream settings
+
+### Common Error Solutions
+- **Connection refused**: Check IP and port
+- **Authentication failed**: Verify credentials
+- **Stream not found**: Check channel number
+- **No route to host**: Verify network configuration
+
+## Security Considerations
+
+1. Change default passwords
+2. Use strong passwords
+3. Limit network access
+4. Keep firmware updated
+5. Monitor access logs
+
+## Advanced Configuration
+
+### Multiple Camera Setup
+For systems with multiple cameras, organize IP addresses logically:
+- NVR: 192.168.5.6
+- Camera 1: 192.168.5.11
+- Camera 2: 192.168.5.12
+- Orin Nano: 192.168.5.170
+
+### Performance Optimization
+1. Use sub-streams for preview
+2. Main stream for recording
+3. Adjust bitrate based on network
+4. Monitor CPU/GPU usage
+5. Consider hardware acceleration
+
+## Reference Documentation
+- [Hikvision NVR User Manual](https://www.hikvision.com/content/dam/hikvision/en/support/download/documents/user-manual/)
+- [RTSP Protocol Specification](https://www.ietf.org/rfc/rfc2326.txt)
+- [Orin Nano Networking Guide](https://developer.nvidia.com/embedded/learn/get-started-jetson-orin-nano-devkit)
+
 
 
    

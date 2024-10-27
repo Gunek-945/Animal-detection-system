@@ -348,13 +348,6 @@ sudo netplan apply
 
 ### 2. NVR Network Setup
 
-#### Using SADP Tool
-1. Download SADP (Search Active Devices Protocol) tool from [Hikvision's official website](https://www.hikvision.com/content/dam/hikvision/en/support/download/tools/sadp-tool/For_Windows/V3.0.2.4/SADPTool.exe)
-
-2. Install and run SADP tool
-   - It will automatically discover Hikvision devices on the network
-   - Note down the NVR's IP address (e.g., 192.168.5.6)
-
 #### Network Configuration Verification
 1. From Orin Nano terminal, test connection to NVR:
 ```bash
